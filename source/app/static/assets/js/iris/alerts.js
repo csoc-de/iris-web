@@ -845,6 +845,16 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
   alert.alert_source_ref = filterXSS(alert.alert_source_ref);
   alert.alert_note = filterXSS(alert.alert_note);
 
+  /** @type {Intl.DateTimeFormatOptions} */
+  const utcFmtOptions = { timeZoneName: "short", timeZone: "UTC" };
+
+  const utcAlertSourceEventTime = alert.alert_source_event_time
+    ? formatTime(alert.alert_source_event_time, utcFmtOptions, true)
+    : "";
+  const utcAlertCreationTime = alert.alert_creation_time
+    ? formatTime(alert.alert_creation_time, utcFmtOptions, true)
+    : "";
+
   let menuOptionsHtmlAlert = '';
   const menuOptions = modulesOptionsAlertReq;
   if (menuOptions.length !== 0) {
@@ -994,8 +1004,8 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
                       ${alert.alert_source_event_time ? `<div class="row mt-2">
                         <div class="col-md-3"><b>Source Event Time:</b></div>
                         <div class="col-md-9 copy-value">
-                            ${formatTime(alert.alert_source_event_time)} UTC
-                            <button class="copy-btn ml-2" data-value="${formatTime(alert.alert_source_event_time)}">
+                            ${utcAlertSourceEventTime}
+                            <button class="copy-btn ml-2" data-value="${utcAlertSourceEventTime}">
                                     <i class="fa fa-copy text-dark"></i>
                             </button>
                         </div>
@@ -1003,8 +1013,8 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
                       ${alert.alert_creation_time ? `<div class="row mt-2">
                         <div class="col-md-3"><b>IRIS Creation Time:</b></div>
                         <div class="col-md-9 copy-value">
-                            ${formatTime(alert.alert_creation_time)} UTC
-                            <button class="copy-btn ml-2" data-value="${formatTime(alert.alert_creation_time)}">
+                            ${utcAlertCreationTime}
+                            <button class="copy-btn ml-2" data-value="${utcAlertCreationTime}">
                                     <i class="fa fa-copy text-dark"></i>
                             </button>
                         </div>
@@ -1209,7 +1219,7 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
                 ${alert_resolution === undefined ? "": alert_resolution} 
                 ${alert.status ? `<span class="badge alert-bade-status badge-pill badge-light mr-3">${alert.status.status_name}</span>` : ''}                    
                 <span title="Alert source event UTC time"><b><i class="fa-regular fa-calendar-check"></i></b>
-                <small class="text-muted ml-1">${formatTime(alert.alert_source_event_time)}</small></span>
+                <small class="text-muted ml-1">${utcAlertSourceEventTime}</small></span>
                 <span title="Alert severity"><b class="ml-3"><i class="fa-solid fa-bolt"></i></b>
                   <small class="text-muted ml-1" id="alertSeverity-${alert.alert_id}" data-severity-id="${alert.severity.severity_id}">${alert.severity.severity_name}</small></span>
                 <span title="Alert source"><b class="ml-3"><i class="fa-solid fa-cloud-arrow-down"></i></b>
