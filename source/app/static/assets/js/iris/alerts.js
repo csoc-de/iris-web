@@ -845,9 +845,16 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
   alert.alert_source_ref = filterXSS(alert.alert_source_ref);
   alert.alert_note = filterXSS(alert.alert_note);
 
+  const localizeAlertSourceEventTime = getLocalizeAlertSourceEventTime();
+
+  /** @type {Intl.DateTimeFormatOptions} */
+  const localFmtOptions = { timeZoneName: "short" };
   /** @type {Intl.DateTimeFormatOptions} */
   const utcFmtOptions = { timeZoneName: "short", timeZone: "UTC" };
 
+  const localAlertSourceEventTime = alert.alert_source_event_time
+    ? formatTime(alert.alert_source_event_time, localFmtOptions, true)
+    : "";
   const utcAlertSourceEventTime = alert.alert_source_event_time
     ? formatTime(alert.alert_source_event_time, utcFmtOptions, true)
     : "";
@@ -1218,8 +1225,8 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
               <div class="">  
                 ${alert_resolution === undefined ? "": alert_resolution} 
                 ${alert.status ? `<span class="badge alert-bade-status badge-pill badge-light mr-3">${alert.status.status_name}</span>` : ''}                    
-                <span title="Alert source event UTC time"><b><i class="fa-regular fa-calendar-check"></i></b>
-                <small class="text-muted ml-1">${utcAlertSourceEventTime}</small></span>
+                <span title="Alert source event ${localizeAlertSourceEventTime ? "local" : "UTC"} time" data-time-local="${localAlertSourceEventTime}" data-time-utc="${utcAlertSourceEventTime}"><b><i class="fa-regular fa-calendar-check"></i></b>
+                <small class="text-muted ml-1">${localizeAlertSourceEventTime ? localAlertSourceEventTime : utcAlertSourceEventTime}</small></span>
                 <span title="Alert severity"><b class="ml-3"><i class="fa-solid fa-bolt"></i></b>
                   <small class="text-muted ml-1" id="alertSeverity-${alert.alert_id}" data-severity-id="${alert.severity.severity_id}">${alert.severity.severity_name}</small></span>
                 <span title="Alert source"><b class="ml-3"><i class="fa-solid fa-cloud-arrow-down"></i></b>
@@ -2165,6 +2172,62 @@ function refreshAlertRelationships(alertId) {
     fetchSimilarAlerts(alertId, true, fetch_open_alerts, fetch_closed_alerts,
         fetch_open_cases, fetch_closed_cases);
 }
+
+/**
+ * Saves the "localize alert source event time" setting to locale storage
+ *
+ * @param {boolean} value The new setting value
+ */
+function setLocalizeAlertSourceEventTime(value) {
+    localStorage.setItem("localizeAlertSourceEventTime", String(value))
+}
+
+/**
+ * Returns the "localize alert source event time" setting from locale storage
+ */
+function getLocalizeAlertSourceEventTime() {
+    return localStorage.getItem("localizeAlertSourceEventTime") === "true";
+}
+
+/**
+ * Toggle `alert_source_event_time` on alert cards between local and UTC time
+ *
+ * @param {boolean} localize Pass `true` to use local times, `false` for UTC
+ */
+function toggleAlertSourceEventTime(localize) {
+    const from = localize ? "UTC" : "local";
+    const to = localize ? "local" : "UTC";
+    /** @type {NodeListOf<HTMLSpanElement>} */
+    const spans = document.querySelectorAll(
+        `span[title="Alert source event ${from} time"]`,
+    );
+    for (const span of spans) {
+        const small = span.querySelector("small");
+        if (!small) {
+            continue;
+        }
+        const toCapitalized = to[0].toUpperCase() + to.slice(1).toLowerCase();
+        const toValue = span.dataset[`time${toCapitalized}`];
+        if (!toValue) {
+            return;
+        }
+        small.textContent = toValue;
+        span.title = span.title.replace(from, to);
+    }
+}
+
+(() => {
+    const localizeAlertSourceEventTimeCheckbox
+        = document.querySelector("#localize-alert-source-event-time-checkbox");
+
+    if (localizeAlertSourceEventTimeCheckbox instanceof HTMLInputElement) {
+        localizeAlertSourceEventTimeCheckbox.checked = getLocalizeAlertSourceEventTime();
+        localizeAlertSourceEventTimeCheckbox.addEventListener("change", () => {
+            setLocalizeAlertSourceEventTime(localizeAlertSourceEventTimeCheckbox.checked);
+            toggleAlertSourceEventTime(localizeAlertSourceEventTimeCheckbox.checked);
+        });
+    }
+})();
 
 $(document).ready(function () {
         initializeFilterSelectPickers();
