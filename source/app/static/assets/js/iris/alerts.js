@@ -1922,6 +1922,9 @@ async function updateAlert(alert_id, data = {}, do_refresh = false, collapse_tog
   data['csrf_token'] = $('#csrf_token').val();
   return post_request_api('/alerts/update/' + alert_id, JSON.stringify(data)).then(function (data) {
     if (notify_auto_api(data)) {
+      if (getAutoRefreshAlerts()) {
+        return refreshAlerts();
+      }
       if (do_refresh) {
         const expanded = $(`#additionalDetails-${alert_id}`).hasClass('show');
         return refreshAlert(alert_id, data.data, expanded)
@@ -2174,6 +2177,22 @@ function refreshAlertRelationships(alertId) {
 }
 
 /**
+ * Saves the "auto refresh alerts" setting to locale storage
+ *
+ * @param {boolean} value The new setting value
+ */
+function setAutoRefreshAlerts(value) {
+    localStorage.setItem("autoRefreshAlerts", String(value))
+}
+
+/**
+ * Returns the "auto refresh alerts" setting from locale storage
+ */
+function getAutoRefreshAlerts() {
+    return localStorage.getItem("autoRefreshAlerts") === "true";
+}
+
+/**
  * Saves the "localize alert source event time" setting to locale storage
  *
  * @param {boolean} value The new setting value
@@ -2217,6 +2236,16 @@ function toggleAlertSourceEventTime(localize) {
 }
 
 (() => {
+    const autoRefreshAlertsCheckbox
+        = document.querySelector("#auto-refresh-alerts-checkbox");
+
+    if (autoRefreshAlertsCheckbox instanceof HTMLInputElement) {
+        autoRefreshAlertsCheckbox.checked = getAutoRefreshAlerts();
+        autoRefreshAlertsCheckbox.addEventListener("change", () => {
+            setAutoRefreshAlerts(autoRefreshAlertsCheckbox.checked);
+        });
+    }
+
     const localizeAlertSourceEventTimeCheckbox
         = document.querySelector("#localize-alert-source-event-time-checkbox");
 
