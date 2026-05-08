@@ -1281,11 +1281,28 @@ function update_time() {
     $('#current_date').text((new Date()).toLocaleString());
 }
 
-function formatTime(in_, format) {
+/**
+ * Formats a UNIX timestamp (seconds) or a date time string
+ *
+ * @param {number|string} in_ The value to parse
+ * @param {Intl.DateTimeFormatOptions} format The formatting options
+ * @param {boolean} [parseZonelessStringAsUtc=false] If true, strings not
+ * containing any time zone information are parsed as UTC
+ *
+ * @returns {string|undefined} The formatted date or undefined if `value` is
+ * neither a number nor a string
+ */
+function formatTime(in_, format, parseZonelessStringAsUtc = false) {
     if (typeof(in_) === typeof(1)){
         let date = new Date(Math.floor(in_) * 1000);
         return date.toLocaleString(undefined, format);
     } else if (typeof(in_) === typeof('')) {
+        if (
+            parseZonelessStringAsUtc
+            && !(/(?:(?:Z)|(?:[+|-]\d{2}:\d{2}))$/).test(in_)
+        ) {
+            in_ += "Z";
+        }
         let date = new Date(in_);
         return date.toLocaleString(undefined, format);
     }
