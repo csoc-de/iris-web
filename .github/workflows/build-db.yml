@@ -58,7 +58,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/dfir-iris/iriswebapp_db
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/iriswebapp_db
           flavor: |
             latest=${{ steps.check_beta.outputs.is_beta != 'true' }}
           tags: |
