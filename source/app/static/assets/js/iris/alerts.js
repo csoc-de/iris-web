@@ -786,7 +786,12 @@ function generateDefinitionList(obj) {
 }
 
 function addTagFilter(this_object) {
-    $('#alert_tags').val($(this_object).data('tag'))
+    const input = $('#alert_tags');
+    const value = input.val();
+    const tags = new Set(value ? value.split(',') : []);
+    const newTag = $(this_object).data('tag');
+    tags[tags.has(newTag) ? 'delete' : 'add'](newTag);
+    input.val(Array.from(tags).join(','));
     refreshAlerts();
 }
 
@@ -1234,7 +1239,7 @@ function renderAlert(alert, expanded=false, modulesOptionsAlertReq,
                 <span title="Alert client"><b class="ml-3"><i class="fa-regular fa-circle-user"></i></b>
                   <small class="text-muted ml-1 mr-2">${filterXSS(alert.customer.customer_name) || 'Unspecified'}</small></span>
                 ${alert.classification && alert.classification.name_expanded ? `<span class="badge badge-pill badge-light" title="Classification" id="alertClassification-${alert.alert_id}" data-classification-id="${alert.classification.id}"><i class="fa-solid fa-shield-virus mr-1"></i>${filterXSS(alert.classification.name_expanded)}</span>`: ''}
-                ${alert.alert_tags ? alert.alert_tags.split(',').map((tag) => `<span class="badge badge-pill badge-light ml-1" title="Add as filter" style="cursor: pointer;" data-tag="${filterXSS(tag)}" onclick="addTagFilter(this);"><i class="fa fa-tag mr-1"></i>${filterXSS(tag)}</span>`).join('') + `<div style="display:none;" id="alertTags-${alert.alert_id}">${filterXSS(alert.alert_tags)}</div>` : ''}
+                ${alert.alert_tags ? alert.alert_tags.split(',').map((tag) => `<span class="badge badge-pill badge-light ml-1" title="Toggle filter" style="cursor: pointer;" data-tag="${filterXSS(tag)}" onclick="addTagFilter(this);"><i class="fa fa-tag mr-1"></i>${filterXSS(tag)}</span>`).join('') + `<div style="display:none;" id="alertTags-${alert.alert_id}">${filterXSS(alert.alert_tags)}</div>` : ''}
                 
               </div>
 
