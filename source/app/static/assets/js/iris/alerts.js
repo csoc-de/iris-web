@@ -525,7 +525,7 @@ const options = {
         navigationButtons: true,
         keyboard: {
             enabled: true,
-            bindToWindow: true
+            bindToWindow: false
         }
     },
     height: (window.innerHeight - 400) + "px",
