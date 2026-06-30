@@ -210,7 +210,8 @@ def get_filtered_alerts(
         conditions.append(Alert.alert_source.ilike(f'%{source}%'))
 
     if tags is not None:
-        conditions.append(Alert.alert_tags.ilike(f"%{tags}%"))
+        quoted_tags = ",".join(f'"{tag}"' for tag in tags.lower().split(","))
+        conditions.append((func.string_to_array(func.lower(Alert.alert_tags), ",").op("@>")(f"{{{quoted_tags}}}")))
 
     if client is not None:
         conditions.append(Alert.alert_customer_id == client)
