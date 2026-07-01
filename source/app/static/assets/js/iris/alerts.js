@@ -792,7 +792,7 @@ function addTagFilter(this_object) {
     const newTag = $(this_object).data('tag');
     tags[tags.has(newTag) ? 'delete' : 'add'](newTag);
     input.val(Array.from(tags).join(','));
-    refreshAlerts();
+    $('#alertFilterForm').trigger('submit');
 }
 
 function getFiltersFromUrl() {
