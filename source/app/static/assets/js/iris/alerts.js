@@ -1927,7 +1927,7 @@ async function updateAlert(alert_id, data = {}, do_refresh = false, collapse_tog
   data['csrf_token'] = $('#csrf_token').val();
   return post_request_api('/alerts/update/' + alert_id, JSON.stringify(data)).then(function (data) {
     if (notify_auto_api(data)) {
-      if (getAutoRefreshAlerts()) {
+      if (getAutoRefreshOnAlertUpdate()) {
         return refreshAlerts();
       }
       if (do_refresh) {
@@ -2182,19 +2182,19 @@ function refreshAlertRelationships(alertId) {
 }
 
 /**
- * Saves the "auto refresh alerts" setting to locale storage
+ * Saves the "auto refresh on alert update" setting to locale storage
  *
  * @param {boolean} value The new setting value
  */
-function setAutoRefreshAlerts(value) {
-    localStorage.setItem("autoRefreshAlerts", String(value))
+function setAutoRefreshOnAlertUpdate(value) {
+    localStorage.setItem("autoRefreshOnAlertUpdate", String(value))
 }
 
 /**
- * Returns the "auto refresh alerts" setting from locale storage
+ * Returns the "auto refresh on alert update" setting from locale storage
  */
-function getAutoRefreshAlerts() {
-    return localStorage.getItem("autoRefreshAlerts") === "true";
+function getAutoRefreshOnAlertUpdate() {
+    return localStorage.getItem("autoRefreshOnAlertUpdate") === "true";
 }
 
 /**
@@ -2241,13 +2241,13 @@ function toggleAlertSourceEventTime(localize) {
 }
 
 (() => {
-    const autoRefreshAlertsCheckbox
-        = document.querySelector("#auto-refresh-alerts-checkbox");
+    const autoRefreshOnAlertUpdateCheckbox
+        = document.querySelector("#auto-refresh-on-alert-update-checkbox");
 
-    if (autoRefreshAlertsCheckbox instanceof HTMLInputElement) {
-        autoRefreshAlertsCheckbox.checked = getAutoRefreshAlerts();
-        autoRefreshAlertsCheckbox.addEventListener("change", () => {
-            setAutoRefreshAlerts(autoRefreshAlertsCheckbox.checked);
+    if (autoRefreshOnAlertUpdateCheckbox instanceof HTMLInputElement) {
+        autoRefreshOnAlertUpdateCheckbox.checked = getAutoRefreshOnAlertUpdate();
+        autoRefreshOnAlertUpdateCheckbox.addEventListener("change", () => {
+            setAutoRefreshOnAlertUpdate(autoRefreshOnAlertUpdateCheckbox.checked);
         });
     }
 
