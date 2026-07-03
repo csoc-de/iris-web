@@ -268,7 +268,7 @@ function manage_group_cac(group_id) {
                   text: "Please wait. We are updating users access.",
                   icon: "/static/assets/img/loader_cubes.gif",
                   button: false,
-                  allowOutsideClick: false
+                  closeOnClickOutside: false
             });
 
             post_request_api('groups/' + group_id + '/cases-access/update', JSON.stringify(data_sent))
@@ -320,7 +320,7 @@ function remove_cases_access_group(group_id, cases, on_finish) {
               text: "Please wait. We are updating users access.",
               icon: "/static/assets/img/loader_cubes.gif",
               button: false,
-              allowOutsideClick: false
+              closeOnClickOutside: false
             });
             var data_sent = Object();
             data_sent['cases'] = cases;

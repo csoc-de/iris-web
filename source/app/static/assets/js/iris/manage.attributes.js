@@ -158,7 +158,7 @@ function update_attribute(attr_id, editor, partial, complete){
               text: "Please wait",
               icon: "/static/assets/img/loader.gif",
               button: false,
-              allowOutsideClick: false
+              closeOnClickOutside: false
         });
     })
     .done((data) => {

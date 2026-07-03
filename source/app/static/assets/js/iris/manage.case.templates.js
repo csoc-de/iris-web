@@ -55,7 +55,7 @@ function add_case_template() {
                       text: "Please wait",
                       icon: "/static/assets/img/loader.gif",
                       button: false,
-                      allowOutsideClick: false
+                      closeOnClickOutside: false
                 });
             })
             .done((data) => {
@@ -236,7 +236,7 @@ function update_case_template(ctempl_id, editor, partial, complete){
               text: "Please wait",
               icon: "/static/assets/img/loader.gif",
               button: false,
-              allowOutsideClick: false
+              closeOnClickOutside: false
         });
     })
     .done((data) => {
@@ -290,7 +290,7 @@ function upload_case_template() {
                       text: "Please wait",
                       icon: "/static/assets/img/loader.gif",
                       button: false,
-                      allowOutsideClick: false
+                      closeOnClickOutside: false
                 });
             })
            .done((data) => {

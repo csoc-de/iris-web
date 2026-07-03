@@ -296,7 +296,7 @@ async function save_ds_multi_files(node, index_i) {
             text: "Please wait. This window will close automatically when the file is uploaded.",
             icon: "/static/assets/img/loader.gif",
             button: false,
-            allowOutsideClick: false
+            closeOnClickOutside: false
         });
     }).then((data) => {
         notify_auto_api(data);
@@ -325,7 +325,7 @@ function save_ds_file(node, file_id) {
               text: "Please wait. This window will close automatically when the file is uploaded.",
               icon: "/static/assets/img/loader.gif",
               button: false,
-              allowOutsideClick: false
+              closeOnClickOutside: false
         });
     })
     .done(function (data){

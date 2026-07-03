@@ -160,7 +160,7 @@ async function sync_note(node_id) {
             },
             dangerMode: true,
             closeOnEsc: false,
-            allowOutsideClick: false,
+            closeOnClickOutside: false,
             allowEnterKey: false
         })
             .then((overwrite) => {
@@ -856,7 +856,7 @@ function delete_folder(directory_id) {
         },
         dangerMode: true,
         closeOnEsc: false,
-        allowOutsideClick: false,
+        closeOnClickOutside: false,
         allowEnterKey: false
     })
         .then((willDelete) => {
@@ -886,7 +886,7 @@ function rename_folder(directory_id, new_directory=false) {
         },
         dangerMode: true,
         closeOnEsc: false,
-        allowOutsideClick: false,
+        closeOnClickOutside: false,
         allowEnterKey: false
     })
         .then((newName) => {

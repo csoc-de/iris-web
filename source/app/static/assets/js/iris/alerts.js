@@ -2110,7 +2110,7 @@ async function updateBatchAlerts(data_content= {}) {
           text: "This window will close automatically when it's done",
           icon: "/static/assets/img/loader.gif",
           button: false,
-          allowOutsideClick: false
+          closeOnClickOutside: false
         });
 
     return post_request_api('/alerts/batch/update', JSON.stringify(data)).then(function (data) {
@@ -2138,7 +2138,7 @@ async function deleteBatchAlerts(data_content= {}) {
               text: "This window will close automatically when it's done",
               icon: "/static/assets/img/loader.gif",
               button: false,
-              allowOutsideClick: false
+              closeOnClickOutside: false
         });
         if (doDelete) {
             const data = {
