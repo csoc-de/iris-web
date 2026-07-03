@@ -2133,14 +2133,14 @@ async function deleteBatchAlerts(data_content= {}) {
 
     do_deletion_prompt(`You are about to delete ${selectedAlerts.length} alerts`, true)
     .then((doDelete) => {
-       window.swal({
-              title: "Alerts are being deleted, please wait",
-              text: "This window will close automatically when it's done",
-              icon: "/static/assets/img/loader.gif",
-              button: false,
-              closeOnClickOutside: false
-        });
         if (doDelete) {
+            window.swal({
+                   title: "Alerts are being deleted, please wait",
+                   text: "This window will close automatically when it's done",
+                   icon: "/static/assets/img/loader.gif",
+                   button: false,
+                   closeOnClickOutside: false
+             });
             const data = {
                 'alert_ids': selectedAlerts,
                 'csrf_token': $('#csrf_token').val()
