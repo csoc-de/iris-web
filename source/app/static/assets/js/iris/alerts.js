@@ -2403,7 +2403,7 @@ $(document).ready(function () {
         if (
             getAutoRefreshOnNewAlerts()
             && new URLSearchParams(window.location.search).get('page') === "1"
-            && !$("#escalateModal, #editAlertModal, #modal_alert_history, #modal_comment").is(':visible')
+            && !$("#escalateModal, #editAlertModal, #modal_alert_history, #modal_comment, .alert-collapsible").is(':visible')
             && !window.swal.getState().isOpen
         ) {
             refreshAlerts();
