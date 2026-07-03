@@ -2182,6 +2182,22 @@ function refreshAlertRelationships(alertId) {
 }
 
 /**
+ * Saves the "auto refresh on new alerts" setting to locale storage
+ *
+ * @param {boolean} value The new setting value
+ */
+function setAutoRefreshOnNewAlerts(value) {
+    localStorage.setItem("autoRefreshOnNewAlerts", String(value))
+}
+
+/**
+ * Returns the "auto refresh on new alerts" setting from locale storage
+ */
+function getAutoRefreshOnNewAlerts() {
+    return localStorage.getItem("autoRefreshOnNewAlerts") === "true";
+}
+
+/**
  * Saves the "auto refresh on alert update" setting to locale storage
  *
  * @param {boolean} value The new setting value
@@ -2241,6 +2257,16 @@ function toggleAlertSourceEventTime(localize) {
 }
 
 (() => {
+    const autoRefreshOnNewAlertsCheckbox
+        = document.querySelector("#auto-refresh-on-new-alerts-checkbox");
+
+    if (autoRefreshOnNewAlertsCheckbox instanceof HTMLInputElement) {
+        autoRefreshOnNewAlertsCheckbox.checked = getAutoRefreshOnNewAlerts();
+        autoRefreshOnNewAlertsCheckbox.addEventListener("change", () => {
+            setAutoRefreshOnNewAlerts(autoRefreshOnNewAlertsCheckbox.checked);
+        });
+    }
+
     const autoRefreshOnAlertUpdateCheckbox
         = document.querySelector("#auto-refresh-on-alert-update-checkbox");
 
@@ -2374,6 +2400,15 @@ $(document).ready(function () {
   });
 
     socket.on('new_alert', function (data) {
+        if (
+            getAutoRefreshOnNewAlerts()
+            && new URLSearchParams(window.location.search).get('page') === "1"
+            && !$("#escalateModal, #editAlertModal, #modal_alert_history, #modal_comment").is(':visible')
+            && !window.swal.getState().isOpen
+        ) {
+            refreshAlerts();
+            return;
+        }
         const badge = $('#newAlertsBadge');
         const currentCount = parseInt(badge.text()) || 0;
         badge.text(currentCount + 1).show();
