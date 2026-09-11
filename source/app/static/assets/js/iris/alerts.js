@@ -1446,9 +1446,8 @@ async function updateAlerts(page, per_page, filters = {}, paging=false){
       queryParams.delete(filterKey);
       $(`#${filterKey}`).val('');
 
-      resetSavedFilters(queryParams, false);
+      resetSavedFilters(queryParams);
 
-      history.replaceState(null, null, `?${queryParams.toString()}`);
       updateAlerts(page, per_page, filters);
     });
   } else {
