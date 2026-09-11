@@ -1349,8 +1349,6 @@ async function updateAlerts(page, per_page, filters = {}, paging=false){
       filters = getFiltersFromForm();
   }
 
-  filters.custom_conditions = editor.getValue();
-
   const alertsContainer = $('.alerts-container');
   alertsContainer.html('<h4 class="ml-auto mr-auto">Retrieving alerts...</h4>');
 
@@ -1485,8 +1483,7 @@ $('#orderAlertsBtn').on('click', function () {
   let per_page = parseInt(queryParams.get('per_page'));
 
 
-  const formData = new FormData($('#alertFilterForm')[0]);
-  const filters = Object.fromEntries(formData.entries());
+  const filters = getFiltersFromForm();
 
   updateAlerts(page_number, per_page, filters);
 });
@@ -1496,10 +1493,7 @@ function refreshAlerts(){
     let page_number = parseInt(queryParams.get('page'));
     let per_page = parseInt(queryParams.get('per_page'));
 
-    const formData = new FormData($('#alertFilterForm')[0]);
-    const filters = Object.fromEntries(formData.entries());
-
-    filters.custom_conditions = editor.getValue();
+    const filters = getFiltersFromForm();
 
     updateAlerts(page_number, per_page, filters)
         .then(() => {
@@ -1538,8 +1532,7 @@ $('#alertFilterForm').on('submit', (e) => {
   e.preventDefault();
 
   // Get the filter values from the form
-  const formData = new FormData(e.target);
-  const filters = Object.fromEntries(formData.entries());
+  const filters = getFiltersFromForm();
 
   const queryParams = new URLSearchParams(window.location.search);
   let per_page = parseInt(queryParams.get('per_page'));
