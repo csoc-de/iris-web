@@ -1444,7 +1444,11 @@ async function updateAlerts(page, per_page, filters = {}, paging=false){
       const filterKey = $(this).data('filter-key');
       delete filters[filterKey];
       queryParams.delete(filterKey);
-      $(`#${filterKey}`).val('');
+      if (filterKey === "custom_conditions") {
+        editor.setValue("", 1);
+      } else {
+        $(`#${filterKey}`).val('');
+      }
 
       resetSavedFilters(queryParams);
 
