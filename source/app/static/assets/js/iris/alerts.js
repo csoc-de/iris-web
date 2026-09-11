@@ -795,7 +795,7 @@ function addTagFilter(this_object) {
     $('#alertFilterForm').trigger('submit');
 }
 
-function getFiltersFromUrl() {
+function getFiltersFromForm() {
     const formData = new FormData($('#alertFilterForm')[0]);
     const filters = Object.fromEntries(formData.entries());
 
@@ -1346,7 +1346,7 @@ async function updateAlerts(page, per_page, filters = {}, paging=false){
   if (sortOrder === undefined) { sortOrder = 'desc'; }
 
   if (paging) {
-      filters = getFiltersFromUrl();
+      filters = getFiltersFromForm();
   }
 
   filters.custom_conditions = editor.getValue();
@@ -1469,7 +1469,7 @@ async function updateAlerts(page, per_page, filters = {}, paging=false){
 
 $('#alertsPerPage').on('change', (e) => {
   const per_page = parseInt(e.target.value, 10);
-    const filters = getFiltersFromUrl();
+    const filters = getFiltersFromForm();
     updateAlerts(1, per_page, filters); // Keep current filters when changing the page size
 });
 
